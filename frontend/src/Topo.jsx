@@ -83,6 +83,7 @@ export default function Topo() {
     const STAGGER = 4 // how many levels are mid-fade at once
     const draw = () => {
       if (!paths) return
+      const rgb = getComputedStyle(document.documentElement).getPropertyValue('--topo')
       const dpr = window.devicePixelRatio || 1
       const w = canvas.clientWidth, h = canvas.clientHeight
       canvas.width = w * dpr
@@ -93,7 +94,7 @@ export default function Topo() {
       ctx.lineJoin = 'round'
       paths.forEach((p, i) => {
         const a = Math.min(1, Math.max(0, (progress * (paths.length + STAGGER) - i) / STAGGER))
-        ctx.strokeStyle = `rgba(255,255,255,${0.14 * a})`
+        ctx.strokeStyle = `rgba(${rgb},${0.14 * a})`
         ctx.stroke(p)
       })
     }
@@ -115,7 +116,13 @@ export default function Topo() {
       .catch((err) => console.warn('topo: could not load terrain', err))
     const ro = new ResizeObserver(draw)
     ro.observe(canvas)
-    return () => { cancelled = true; ro.disconnect() }
+    let wasLight = document.documentElement.classList.contains('light')
+    const mo = new MutationObserver(() => { // redraw on theme toggle only, not on sidebar collapse
+      const isLight = document.documentElement.classList.contains('light')
+      if (isLight !== wasLight) { wasLight = isLight; draw() }
+    })
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => { cancelled = true; ro.disconnect(); mo.disconnect() }
   }, [])
 
   return <canvas ref={ref} className="topo" aria-hidden="true" />

@@ -25,8 +25,31 @@
   --text: #E6E8EB;
   --text-muted: #9AA1AB;
   --line: #262C36;
+  --topo: 255,255,255;
   color-scheme: dark;
 }
+
+/* Light mode: set by the toggle (html.light); teal/coral lightened text variants keep AA contrast on white */
+:root.light {
+  --bg: #E4E7EC;
+  --bg-raised: #D6DAE1;
+  --text: var(--color-ink);
+  --text-muted: #4A525D;
+  --line: #BCC2CC;
+  --topo: 18,53,91;
+  color-scheme: light;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .theme-anim, .theme-anim *, .theme-anim *::before, .theme-anim *::after {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease !important;
+  }
+}
+:root.light a,:root.light .card h3 { color: #0B7F72; }
+:root.light h1 { color: #D9402E; }
+/* screen blending washes the coral/teal split out on a light page; multiply keeps it and the title stays black */
+:root.light .hero-title { color: #000; }
+:root.light .glitch::before, :root.light .glitch::after { mix-blend-mode: multiply; }
+:root.light .card .links a:hover { color: #D9402E; }
 
 body {
   margin: 0;
@@ -78,6 +101,8 @@ aside nav a:hover, aside button:hover { background: var(--line); color: var(--co
 aside svg { flex-shrink: 0; transition: transform 0.25s ease; }
 aside span { transition: opacity 0.2s ease; }
 
+aside button.theme { margin-top: auto; }
+aside button.theme + button { margin-top: 0; }
 aside button {
   margin-top: auto;
   background: none;
@@ -125,7 +150,8 @@ footer span a { margin-left: 1rem; }
   .layout { flex-direction: column; }
   aside { width: auto; height: auto; position: static; border-right: 0; border-bottom: 1px solid var(--line); flex-direction: row; align-items: center; flex-wrap: wrap; }
   aside nav { flex-direction: row; }
-  aside button { display: none; }
+  aside button:not(.theme) { display: none; }
+  aside button.theme { margin-top: 0; margin-left: auto; }
 }
 
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1rem; }

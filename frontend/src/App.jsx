@@ -40,6 +40,16 @@ function Sidebar() {
     setCollapsed(next)
     try { localStorage.sidebar = next ? 'collapsed' : 'open' } catch (e) {}
   }
+  const [light, setLight] = useState(() => document.documentElement.classList.contains('light'))
+  const toggleTheme = () => {
+    const next = !light
+    const root = document.documentElement
+    root.classList.add('theme-anim') // transitions only while switching, so hovers and the page load are unaffected
+    root.classList.toggle('light', next)
+    setTimeout(() => root.classList.remove('theme-anim'), 400)
+    setLight(next)
+    try { localStorage.theme = next ? 'light' : 'dark' } catch (e) {}
+  }
   return (
     <aside>
       <NavLink className="logo" to="/"><Logo /></NavLink>
@@ -48,6 +58,12 @@ function Sidebar() {
           <NavLink key={to} to={to} title={label}>{icon(d)}<span>{label}</span></NavLink>
         ))}
       </nav>
+      <button type="button" className="theme" title="Toggle theme" aria-pressed={light} onClick={toggleTheme}>
+        {icon(light
+          ? '<path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>'
+          : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>')}
+        <span>{light ? 'Dark mode' : 'Light mode'}</span>
+      </button>
       <button type="button" aria-label="Toggle sidebar" aria-expanded={!collapsed} onClick={toggle}>
         {icon('<path d="M15 6l-6 6 6 6"/>')}<span>Collapse</span>
       </button>
@@ -84,6 +100,7 @@ const Home = () => (
 
 const Contact = () => (
   <Page title="Contact">
+    <p>For inquiries, contact:</p>
     <p><strong>Thomas Eubank</strong><br />Owner / Founder</p>
     <p>
       Email: <a href="mailto:thomas@stat-line.app">thomas@stat-line.app</a><br />
@@ -108,7 +125,7 @@ const Privacy = () => (
       </p>
       <h2>What your browser stores</h2>
       <p>
-        The site saves one preference (whether the sidebar is collapsed) in your browser's local storage. It stays on
+        The site saves two preferences (whether the sidebar is collapsed, and light or dark mode) in your browser's local storage. It stays on
         your device, is never sent to us, and you can clear it at any time.
       </p>
       <h2>Third-party services</h2>
