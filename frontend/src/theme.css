@@ -1,0 +1,194 @@
+/* Eubank Technologies — brand theme */
+
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600&display=swap');
+
+:root {
+  /* Brand colors (from the logo) */
+  --color-coral: #FF6B5A;
+  --color-teal: #14B8A6;
+  --color-navy: #12355B;
+
+  /* Neutrals */
+  --color-ink: #14171C;      /* wordmark and body text */
+  --color-white: #FFFFFF;
+  --color-surface: #F5F6F8;  /* light page and section backgrounds */
+  --color-border: #D9DCE1;
+
+  /* Typography */
+  --font-brand: 'Oxanium', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* Dark mode */
+:root {
+  --bg: #0E1116;
+  --bg-raised: #171B22;
+  --text: #E6E8EB;
+  --text-muted: #9AA1AB;
+  --line: #262C36;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-brand);
+}
+
+a { color: var(--color-teal); }
+
+h1 { color: var(--color-coral); }
+
+.layout { display: flex; min-height: 100vh; }
+
+aside {
+  width: 190px;
+  flex-shrink: 0;
+  background: var(--bg-raised);
+  border-right: 1px solid var(--line);
+  padding: 1rem 0.75rem;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  transition: width 0.25s ease;
+}
+
+aside .logo { display: block; }
+aside .logo svg { display: block; width: 100%; max-width: 120px; height: auto; }
+
+aside nav { display: flex; flex-direction: column; gap: 0.125rem; }
+aside nav a, aside button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 6px;
+  border-radius: 6px;
+  color: var(--text);
+  text-decoration: none;
+  font: inherit;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+aside nav a:hover, aside button:hover { background: var(--line); color: var(--color-teal); }
+aside svg { flex-shrink: 0; transition: transform 0.25s ease; }
+aside span { transition: opacity 0.2s ease; }
+
+aside button {
+  margin-top: auto;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.content {
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+main { flex: 1; width: 100%; max-width: 60rem; margin: 0 auto; padding: 2rem; box-sizing: border-box; }
+
+footer {
+  background: var(--bg-raised);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  border-top: 1px solid var(--line);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+footer span a { margin-left: 1rem; }
+
+@media (min-width: 701px) {
+  .collapsed aside { width: 56px; }
+  .collapsed aside span { opacity: 0; }
+  .collapsed aside button svg { transform: rotate(180deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  aside, aside svg, aside span { transition: none; }
+}
+
+@media (max-width: 700px) {
+  .layout { flex-direction: column; }
+  aside { width: auto; height: auto; position: static; border-right: 0; border-bottom: 1px solid var(--line); flex-direction: row; align-items: center; flex-wrap: wrap; }
+  aside nav { flex-direction: row; }
+  aside button { display: none; }
+}
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1rem; }
+.card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover, .card:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--color-teal);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--color-teal) 22%, transparent);
+}
+.card h3 { margin: 0; color: var(--color-teal); }
+.card .tagline { color: var(--text-muted); margin-top: 0.25rem; }
+.card .stack { color: var(--text-muted); font-size: 0.85rem; }
+.card .links a { margin-right: 1rem; }
+
+/*
+  Contrast on the dark background: text, teal links and coral headings
+  all pass AA. Navy is too dark to use for text here.
+*/
+
+/* Image loading (see Img.jsx): the img stays in the DOM but out of sight until it has loaded */
+.img-wrap { display: inline-block; position: relative; overflow: hidden; border-radius: 6px; min-width: min(100%, 16rem); }
+.img-wrap img { display: block; max-width: 100%; }
+.img-wrap:not(.loaded) img { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+.img-wrap { --ascii-accent: var(--color-teal); }
+
+
+.statement { max-width: 36rem; margin-inline: auto; text-align: center; }
+
+/* Glitch text (Glitch.jsx): resting coral/teal split; warp + jumping layers only on hover */
+.glitch { --split: 0.035em; /* coral/teal offset, scales with the text */ position: relative; display: inline-block; }
+.glitch::before, .glitch::after { content: attr(data-text); position: absolute; inset: 0; mix-blend-mode: screen; pointer-events: none; }
+.glitch::before { color: var(--color-coral); transform: translate(calc(var(--split) * -1), calc(var(--split) * 0.5)); }
+.glitch::after { color: var(--color-teal); transform: translate(calc(var(--split) * 1), calc(var(--split) * -0.5)); }
+.glitch:hover { filter: url(#warp); }
+.glitch:hover::before { animation: split-a 2.4s steps(1) infinite; }
+.glitch:hover::after { animation: split-b 2.4s steps(1) infinite; }
+@keyframes split-a { 0%, 100% { transform: translate(calc(var(--split) * -1), calc(var(--split) * 0.5)); } 20% { transform: translate(calc(var(--split) * -1.45), calc(var(--split) * 0.15)); } 55% { transform: translate(calc(var(--split) * -0.85), calc(var(--split) * 0.65)); } 80% { transform: translate(calc(var(--split) * -1.3), calc(var(--split) * -0.15)); } }
+@keyframes split-b { 0%, 100% { transform: translate(calc(var(--split) * 1), calc(var(--split) * -0.5)); } 30% { transform: translate(calc(var(--split) * 1.55), calc(var(--split) * -0.15)); } 60% { transform: translate(calc(var(--split) * 0.85), calc(var(--split) * -0.65)); } 85% { transform: translate(calc(var(--split) * 1.3), calc(var(--split) * 0.15)); } }
+@media (prefers-reduced-motion: reduce) {
+  .glitch:hover { filter: none; }
+  .glitch:hover::before, .glitch:hover::after { animation: none; }
+}
+
+/* Error page */
+.error-page { text-align: center; padding: 3rem 0; }
+.error-code { margin: 0; font-size: clamp(5rem, 22vw, 11rem); line-height: 1; color: var(--text); }
+
+/* Live topo canvas (Topo.jsx) */
+.topo { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+.prose { max-width: 40rem; }
+.prose h2 { margin-top: 1.75rem; }
+
+.card .links a, .prose a, .statement a { text-underline-offset: 3px; transition: color 0.15s ease; }
+.card .links a:hover { color: var(--color-coral); }
+.hero-title:hover { filter: url(#warp-soft); } /* gentler warp: the text is much smaller than the error code */
+.hero-title { display: block; width: fit-content; margin: 0 auto 1.25rem; text-align: center; font-size: clamp(2.5rem, 9vw, 5rem); line-height: 1.05; color: var(--text); }
+@media (prefers-reduced-motion: reduce) { .card, .card:hover, .card:focus-within { transform: none; transition: none; } }
+
+::selection { background: var(--color-teal); color: var(--color-ink); }
